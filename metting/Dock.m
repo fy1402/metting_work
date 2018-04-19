@@ -64,14 +64,14 @@
     [tabItem setBackgroundImage:backgroundImage];
     [tabItem setSelectedImage:selectedImage];
     
-    tabItem.backgroundColor = randomColor;
+    tabItem.backgroundColor = [UIColor randomColor];
     
     //设置位置
-    tabItem.frame = CGRectMake(0,  HEIGHT / 4 * (weight - 1), DockItemWidth, HEIGHT / 4);
+    tabItem.frame = CGRectMake(0,  self.frame.size.height / 4 * (weight - 1), DockItemWidth, self.frame.size.height / 4);
     
     //设置选中触摸选中事件
     [tabItem addTarget:self action:@selector(tabItemTouchEvent:) forControlEvents:UIControlEventTouchDown];
-    tabItem.tag = weight - 1;
+    tabItem.tag = weight;
     [self addSubview:tabItem];
     
 }

@@ -15,7 +15,7 @@
 #import "MessageViewController.h"
 #import "Masonry.h"
 
-@interface MainController ()<DockItemDelegate>
+@interface MainController ()<DockItemDelegate, UISplitViewControllerDelegate>
 @property (nonatomic, strong) UIView *bgView;
 @end
 
@@ -26,17 +26,13 @@
     // Do any additional setup after loading the view.
     
     // Do any additional setup after loading the view.
-    self.view.backgroundColor=[UIColor greenColor];
+    self.view.backgroundColor=[UIColor blackColor];
     
     //加入侧边栏Dock
-    Dock *dock=[[Dock alloc]initWithFrame:CGRectMake(0, 0, 150, self.view.frame.size.height)];
-    dock.dockDelegate=self;
-    [self.view addSubview:dock];
-    
-//    self.bgView = [[UIView alloc] initWithFrame:CGRectMake(0, DockItemWidth + 16, self.view.frame.size.width - DockItemWidth - 16, self.view.frame.size.height)];
-//    [self.view addSubview:self.bgView];
-//    self.bgView.backgroundColor = [UIColor cyanColor];
-    
+//    Dock *dock=[[Dock alloc]initWithFrame:CGRectMake(0, 0, 150, self.view.frame.size.height)];
+//    dock.dockDelegate=self;
+//    [self.view addSubview:dock];
+    [self setupRootViewController];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -44,25 +40,68 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)setupRootViewController {
+    UISplitViewController *splitView = [[UISplitViewController alloc] init];
+    
+    [self.view addSubview:splitView.view];
+    
+//    self.splitView = splitView;
+    
+//    MasterViewController *master = [[MasterViewController alloc] init];
+//
+//    DetailViewController *detail = [[DetailViewController alloc] init];
+//
+//    UINavigationController *masterNavigationController = [[UINavigationController alloc] initWithRootViewController:master];
+//
+//    UINavigationController *detailNavigationController = [[UINavigationController alloc] initWithRootViewController:detail];
+//
+//    splitView.viewControllers = @[masterNavigationController, detailNavigationController];
+//
+//    splitView.delegate = self;
+    
+    
+    
+        // 初始化分割视图控制器
+        UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
+    
+        PersonalCenterController *personController = [[PersonalCenterController alloc] init];
+        WorkingController *workController = [[WorkingController alloc] init];
+        WaitingWorkController *waitingController = [[WaitingWorkController alloc] init];
+        MessageViewController *messageController = [[MessageViewController alloc] init];
+    
+    UINavigationController *perNav = [[UINavigationController alloc] initWithRootViewController:personController];
+    UINavigationController *workNav = [[UINavigationController alloc] initWithRootViewController:workController];
+    UINavigationController *waitingNav = [[UINavigationController alloc] initWithRootViewController:waitingController];
+    UINavigationController *messageNav = [[UINavigationController alloc] initWithRootViewController:messageController];
+    
+        // 设置分割面板的 2 个视图控制器
+        splitViewController.viewControllers = @[perNav, workNav, waitingNav, messageNav];
+    
+//     添加到窗口
+        [self addChildViewController:splitViewController];
+        [self.view addSubview:splitViewController.view];
+    
+}
+
 -(void)switchMainByTabItem:(Dock *)dock originalTab:(int)start destinationTab:(int)end{
     switch (end) {
-        case 0:
-            if ([self configViewWithTag:0]) {
+        case 1:
+            if ([self configViewWithTag:end]) {
                 [self personalCenterViewByController];
             }
             break;
-        case 1:
-            if ([self configViewWithTag:1]) {
+        case 2:
+            if ([self configViewWithTag:end]) {
                 [self waitingWorkViewByController];
             }
             break;
-        case 2:
-            if ([self configViewWithTag:2]) {
+        case 3:
+            if ([self configViewWithTag:end]) {
                 [self workingViewByController];
             }
             break;
-        case 3:
-            if ([self configViewWithTag:3]) {
+        case 4:
+            if ([self configViewWithTag:end]) {
                 [self messageViewByController];
             }
             break;
@@ -74,9 +113,6 @@
 
 - (BOOL)configViewWithTag:(NSInteger)tag {
     NSArray *views = self.view.subviews;
-//    if (views.count <= 0) {
-//        return true;
-//    }
     for (UIView *view in views) {
         if (view.tag == tag) {
             [self.view bringSubviewToFront:view];
@@ -88,7 +124,7 @@
 
 - (void)personalCenterViewByController {
     PersonalCenterController *controller = [[PersonalCenterController alloc] init];
-    controller.view.tag = 0;
+    controller.view.tag = 1 * 1000;
     [self.view addSubview: controller.view];
     [controller.view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.right.bottom.mas_offset(0);
@@ -98,7 +134,7 @@
 
 - (void)waitingWorkViewByController {
     WaitingWorkController *controller = [[WaitingWorkController alloc] init];
-    controller.view.tag = 1;
+    controller.view.tag = 2 * 1000;
     [self.view addSubview: controller.view];
     [controller.view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.right.bottom.mas_offset(0);
@@ -108,7 +144,7 @@
 
 - (void)workingViewByController {
     WorkingController *controller = [[WorkingController alloc] init];
-    controller.view.tag = 2;
+    controller.view.tag = 3 * 1000;
     [self.view addSubview: controller.view];
     [controller.view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.right.bottom.mas_offset(0);
@@ -118,7 +154,7 @@
 
 - (void)messageViewByController {
     MessageViewController *controller = [[MessageViewController alloc] init];
-    controller.view.tag = 3;
+    controller.view.tag = 4 * 1000;
     [self.view addSubview: controller.view];
     [controller.view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.right.bottom.mas_offset(0);

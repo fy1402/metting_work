@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "MainController.h"
+#import "JSSplitViewController.h"
 
 @interface AppDelegate ()
 
@@ -19,11 +19,60 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+//    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+//    self.window.backgroundColor = [UIColor whiteColor];
+//    [self.window makeKeyAndVisible];
+//    UINavigationController *mainNav = [[UINavigationController alloc] initWithRootViewController:[[MainController alloc] init]];
+////    mainNav.navigationBarHidden = YES;
+//    mainNav.navigationController.navigationBarHidden = YES;
+//    self.window.rootViewController = mainNav;
+    
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.backgroundColor = [UIColor whiteColor];
+    
+    /*
+     UIUserInterfaceIdiomUnspecified = -1,
+     UIUserInterfaceIdiomPhone NS_ENUM_AVAILABLE_IOS(3_2),      // iPhone and iPod touch style UI
+     UIUserInterfaceIdiomPad NS_ENUM_AVAILABLE_IOS(3_2),        // iPad style UI
+     UIUserInterfaceIdiomTV NS_ENUM_AVAILABLE_IOS(9_0),         // Apple TV style UI
+     UIUserInterfaceIdiomCarPlay NS_ENUM_AVAILABLE_IOS(9_0),    // CarPlay style UI
+     */
+    
+//    if (isiPhone) {
+//
+//        JSTabBarController *tabBarController = [[JSTabBarController alloc] init];
+//        self.window.rootViewController = tabBarController;
+//
+//    }else{
+    
+        // 创建splitViewController 在显示前必须设置主视图控制器,可以不设置明细控制器
+        JSSplitViewController *splitViewController = [[JSSplitViewController alloc] init];
+        
+        self.window.rootViewController = splitViewController;
+        
+        // 设置状态栏样式
+        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+//    }
+    
     [self.window makeKeyAndVisible];
-    self.window.rootViewController = [[MainController alloc] init];
+
     return YES;
+}
+
+// 当设置应用的可支持方向时调用
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
+    
+    // 根据不同设备设置支持方向
+//    if (isiPhone) {
+//
+//        // iPhone
+//        return UIInterfaceOrientationMaskPortrait;
+//
+//    }else {
+    
+        // iPad
+        return UIInterfaceOrientationMaskAll;
+//    }
+    
 }
 
 
